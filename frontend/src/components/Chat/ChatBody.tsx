@@ -30,7 +30,7 @@ export default function ChatBody({
             ...messages,
             { text: data.message, isMe: false },
           ]);
-
+        } else {
           enqueueSnackbar(`New message from Participant ${senderId}`, {
             variant: "info",
           });
