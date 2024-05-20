@@ -12,6 +12,13 @@ Then navigate to the backend directory and run the following commands:
 
 ```bash
 cp .env.local .env
+```
+Open the .env file and set the OPENAI_SECRET_KEY variable to your OpenAI API key. The file should look like this:
+```bash
+OPENAI_SECRET_KEY=
+```
+Then run the following command:
+```
 npm install
 ```
 
