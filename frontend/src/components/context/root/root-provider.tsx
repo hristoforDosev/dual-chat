@@ -4,17 +4,15 @@ import { RootContextProps } from "./types";
 
 export function RootProvider({
   children,
-  socket,
-  messages,
-  setMessages,
+  setLoggedIn,
+  setError,
 }: PropsWithChildren<RootContextProps>) {
   const memoizedValue = useMemo(
     () => ({
-      socket,
-      messages,
-      setMessages,
+      setLoggedIn,
+      setError,
     }),
-    [socket, messages, setMessages],
+    [setLoggedIn, setError],
   );
 
   return (

@@ -52,6 +52,5 @@ window.env = {
   "npm_config_prefix": "/Users/hristofor/.nvm/versions/node/v16.13.2",
   "_": "/Users/hristofor/Projects/dual-chat/frontend/node_modules/.bin/react-dotenv",
   "APP_HOST": "http://localhost:8080",
-  "SOCKET": "http://localhost:81",
-  "SOCKET_SECRET": "98a31a2bd9dc97a46b804cb16d34cf68"
+  "SOCKET": "http://localhost:81"
 };

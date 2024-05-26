@@ -38,23 +38,35 @@ export class EventsGateway {
   @SubscribeMessage(ChatEvents.SendMessage)
   async handleSendMessage(
     @MessageBody()
-    payload: { message: string; senderId: string; receiverId: string },
-    @ConnectedSocket() client: Socket,
+    payload: {
+      message: string;
+      to: string;
+    },
   ) {
-    const { senderId, receiverId, message } = payload;
+    const { to, message } = payload;
     const response = await this.openAiService.chatGptRequest(message, []);
 
-    client.join([senderId, receiverId]);
-    this.server.to(senderId).emit(ChatEvents.ReceiveOpenAiMessage, {
+    this.server.to(to).emit(ChatEvents.ReceiveOpenAiMessage, {
       message: response,
-      senderId,
     });
 
-    this.server.to(receiverId).emit(ChatEvents.ReceiveMessage, {
+    this.server.to(to).emit(ChatEvents.ReceiveMessage, {
       message,
-      receiverId,
     });
 
     this.logger.debug(`socket event: ${ChatEvents.SendMessage} received.`);
+  }
+
+  @SubscribeMessage(ChatEvents.JoinRoom)
+  async handleJoinRoom(
+    @MessageBody()
+    payload: { roomName: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.join(payload.roomName);
+
+    this.logger.debug(
+      `socket event: ${ChatEvents.JoinRoom} from client: ${client.id} received.`,
+    );
   }
 }

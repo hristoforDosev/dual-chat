@@ -1,36 +1,24 @@
 import { useEffect, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { ChatEvents } from "./consts";
-import { useRootContext } from "../context/root/root-context";
+import { useChatContext } from "../context/chat/chat-context";
 
-export default function ChatFooter({
-  senderId,
-  receiverId,
-}: {
-  senderId: number;
-  receiverId: number;
-}) {
-  const { socket, setMessages } = useRootContext();
+export default function ChatFooter({ receiverId }: { receiverId: number }) {
+  const { socket, setMessages } = useChatContext();
   const [currentMessage, setCurrentMessage] = useState("");
 
   useEffect(() => {
     socket.on(
       ChatEvents.ReceiveOpenAiMessage,
-      ({
-        message,
-        senderId: socketSenderId,
-      }: {
-        message: string;
-        senderId: number;
-      }) => {
-        senderId !== socketSenderId && setCurrentMessage(message);
+      ({ message }: { message: string }) => {
+        setCurrentMessage(message);
       },
     );
 
     return () => {
       socket.off(ChatEvents.ReceiveOpenAiMessage);
     };
-  }, [socket, senderId, receiverId, setMessages]);
+  }, [socket, receiverId, setMessages]);
 
   const handleSubmission = () => {
     const message = currentMessage.trim();
@@ -39,8 +27,7 @@ export default function ChatFooter({
     if (message.length === 0) return;
     socket.emit(ChatEvents.SendMessage, {
       message: currentMessage.trim(),
-      senderId,
-      receiverId,
+      to: receiverId,
     });
 
     setMessages((messages) => [...messages, { text: message, isMe: true }]);

@@ -6,15 +6,13 @@ import { useState } from "react";
 import { ACCESS_TOKEN, fetchApi } from "../../utils/fetch";
 import { localStorageSet } from "../../utils/local-storage";
 import ErrorHandler from "../ErrorHandler";
+import { useRootContext } from '../context/root/root-context';
 
-export default function Login({
-  setLoggedIn,
-}: {
-  setLoggedIn: (value: boolean) => void;
-}) {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<Error>();
+  const { setLoggedIn } = useRootContext();
 
   const handleSubmit = async () => {
     fetchApi(`/auth/login`, {
